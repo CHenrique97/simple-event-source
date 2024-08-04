@@ -1,10 +1,9 @@
-
 import {useDraggable} from '@dnd-kit/core';
+import { v4 as uuidv4 } from 'uuid';
 
-
-export function Card(props:any) {
+export function DraggableCard(props:any) {
   const {attributes, listeners, setNodeRef, transform} = useDraggable({
-    id: 'draggable',
+    id: "draggable"
   });
   const style = transform ? {
     transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
@@ -12,8 +11,8 @@ export function Card(props:any) {
 
   
   return (
-    <button ref={setNodeRef} style={style} {...listeners} {...attributes}>
+    <div  ref={setNodeRef} style={style} {...listeners} {...attributes}>
       {props.children}
-    </button>
+    </div>
   );
 }

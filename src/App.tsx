@@ -2,19 +2,23 @@ import "./App.css";
 
 import { DndContext } from "@dnd-kit/core";
 
-import { Card } from "./card/cards";
+import {DraggableCard} from "./card/cards";
 import { Field } from "./fields/fields";
 import { useState } from "react";
 import Snapshot from "./card/snapshot";
+import { ThemeProvider } from "./components/ui/theme-provider";
+import { EventTypes } from "./event-types";
+import useStore from "./store/useStore";
 
 function App() {
   const snapshotStyle: React.CSSProperties = {
     margin: "5px",
-    justifyContent: "center",
+    display: "flex",
+    flexDirection:"column",
     alignContent: "flex-start",
-    width: "400px", // Width of the square
+    alignItems: "center",
+    width: "500px", // Width of the square
     height: "400px", // Height of the square
-    backgroundColor: "#333", // Dark grey background
     border: "2px solid white", // White border with 5px width
     borderRadius: "15px", // Rounded edges with 15px radius
   };
@@ -24,9 +28,8 @@ function App() {
     display: "flex",
     justifyContent: "center",
     alignContent: "flex-start",
-    width: "200px", // Width of the square
+    width: "300px", // Width of the square
     height: "400px", // Height of the square
-    backgroundColor: "#333", // Dark grey background
     border: "2px solid white", // White border with 5px width
     borderRadius: "15px", // Rounded edges with 15px radius
   };
@@ -34,39 +37,44 @@ function App() {
   const eventTypesStyle: React.CSSProperties = {
     marginTop: "10px",
     marginLeft: "5px",
-    width: "62xS0px", // Width of the square
-    height: "100px", // Height of the square
-    backgroundColor: "#333", // Dark grey background
+    width: "820px", // Width of the square
     border: "2px solid white", // White border with 5px width
     borderRadius: "15px", // Rounded edges with 15px radius
   };
 
-  const [isDropped, setIsDropped] = useState(false);
+  const isDropped = useStore((state) => state.isDropped);
+  const setIsDropped = useStore((state) => state.setIsDropped);
+
   const handleDragEnd = (event: any) => {
     if (event.over && event.over.id === "droppable") {
       setIsDropped(true);
     }
   };
 
-  const draggableMarkup = <Card>Drag me</Card>;
+const draggableMarkup =   <Field title="Event Types " style={eventTypesStyle}>
+<EventTypes></EventTypes>
+</Field>
 
   return (
-    <div className="main">
-      <DndContext onDragEnd={handleDragEnd}>
-        {!isDropped ? draggableMarkup : null}
-        <div className="calculation-area">
-          <Field title="Event list" style={eventListStyle}></Field>
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="w-45 max-w-screen-lg">
+          <DndContext onDragEnd={handleDragEnd}>
+            
+            <div className="calculation-area space-y-4">
+            <Field title="Event list" style={eventListStyle}></Field>
+           
 
-          <Field title="Snapshot" style={snapshotStyle}>
-            <Snapshot />
-          </Field>
+              <Field title="Snapshot" style={snapshotStyle}>
+                <Snapshot />
+              </Field>
+            </div>
+            {!isDropped ? draggableMarkup : null}
+
+          </DndContext>
         </div>
-
-        <Field title="" style={eventTypesStyle}>
-          {isDropped ? draggableMarkup : "Drop here"}
-        </Field>
-      </DndContext>
-    </div>
+      </div>
+    </ThemeProvider>
   );
 }
 

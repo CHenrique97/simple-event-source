@@ -2,9 +2,8 @@ import useStore from "../store/useStore";
 import {
     Card,
     CardContent,
-    CardHeader,
+    CardTitle,
   } from "@/components/ui/card"
-  import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils";
 
 
@@ -17,28 +16,26 @@ const Snapshot: React.FC = () => {
 
     
     return (
-<Card className={cn("w-[380px]")}>
-      <CardHeader>
-      </CardHeader>
+<Card className={cn("w-[300px]")}>
       <CardContent>
-          <div className="grid w-full items-center gap-4">
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="name">Principal</Label>
-              <p className="text-sm font-medium leading-none">
-              {principal}
-            </p>
+          <div className="grid w-full items-center justify-center gap-10">
+            <div className="flex flex-row space-x-1.5 mt-8">
+              <CardTitle>Principal:</CardTitle>
+              <CardTitle>
+             $ {principal}
+            </CardTitle>
             </div>
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="name">Interest</Label>
-              <p className="text-sm font-medium leading-none">
-              {interest}
-            </p>
+            <div className="flex flex-row space-x-4">
+              <CardTitle>Interest:</CardTitle>
+              <CardTitle>
+              $ {interest}
+            </CardTitle>
             </div>
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="name">Late Fee</Label>
-              <p className="text-sm font-medium leading-none">
-              {lateFee}
-            </p>
+            <div className="flex flex-row space-x-2.5">
+              <CardTitle>Late Fee: </CardTitle>
+              <CardTitle>
+              $ {lateFee}
+            </CardTitle>
             </div>
 
           </div>

@@ -1,3 +1,4 @@
+import { CardHeader, CardTitle } from "@/components/ui/card";
 import "./fields.css"
 import {useDroppable} from '@dnd-kit/core';
 
@@ -21,8 +22,11 @@ export const Field  = (props: Fields)  => {
   
   return (
     <>
-    <div ref={setNodeRef} style ={customStyle}>
-    <h3>{props.title}</h3>
+    <div ref={setNodeRef} style ={customStyle}> 
+    <CardHeader>
+    <CardTitle>{props.title}</CardTitle>
+
+  </CardHeader>
     {props.children}
     </div>
     </>
