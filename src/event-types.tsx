@@ -6,6 +6,8 @@ import useStore from './store/useStore';
 import { EventType, EventState } from './store/useStore';
 import { useState } from "react";
 
+import { v4 as randomUUID } from "uuid";
+
 
 
 export const EventTypes = () => {
@@ -55,7 +57,9 @@ const handleDisbursementChange = (event: React.ChangeEvent<HTMLInputElement>) =>
         </CardContent>
         <CardFooter>
           <Button onClick={() => addEvent({
-            eventType: EventType.initLoan, principal: principal,
+            eventType: EventType.initLoan, 
+            eventId: randomUUID(),
+            principal: principal,
             interest: 0,
             lateInterest: 0,
             lateFee: 0,
@@ -80,6 +84,7 @@ const handleDisbursementChange = (event: React.ChangeEvent<HTMLInputElement>) =>
         <CardFooter>
         <Button onClick={() => addEvent({
             eventType: EventType.accrual, 
+            eventId:randomUUID(),
             principal: 0,
             interest: interest,
             lateInterest: 0,
@@ -107,6 +112,7 @@ const handleDisbursementChange = (event: React.ChangeEvent<HTMLInputElement>) =>
         <CardFooter className="-mt-4">
         <Button onClick={() => addEvent({
             eventType: EventType.deliquency, 
+            eventId:randomUUID(),
             principal: 0,
             interest: 0,
             lateInterest: lateInterest,
@@ -132,6 +138,7 @@ const handleDisbursementChange = (event: React.ChangeEvent<HTMLInputElement>) =>
         <CardFooter >
         <Button onClick={() => addEvent({
             eventType: EventType.payment, 
+            eventId:randomUUID(),
             principal: 0,
             interest: 0,
             lateInterest: 0,
