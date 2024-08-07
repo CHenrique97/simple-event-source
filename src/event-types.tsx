@@ -6,6 +6,8 @@ import useStore from './store/useStore';
 import { EventType, EventState } from './store/useStore';
 import { useState } from "react";
 
+import { v4 as randomUUID } from "uuid";
+
 
 
 export const EventTypes = () => {
@@ -15,6 +17,8 @@ export const EventTypes = () => {
   const [lateInterest, setLateInterest] = useState(0);
   const [lateFee, setLateFee] = useState(0);
   const [disbursement, setDisbursement] = useState(0);
+
+  const appendEvent = useStore((state) => state.appendEvent);
 
   const handlePrincipalChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPrincipal(Number(event.target.value));
@@ -34,7 +38,7 @@ const handleDisbursementChange = (event: React.ChangeEvent<HTMLInputElement>) =>
 
 
   const  addEvent = (eventState: EventState) => {
-    useStore((state) => state.appendEvent(eventState));
+    appendEvent(eventState);
   }
 
   return (
@@ -55,7 +59,9 @@ const handleDisbursementChange = (event: React.ChangeEvent<HTMLInputElement>) =>
         </CardContent>
         <CardFooter>
           <Button onClick={() => addEvent({
-            eventType: EventType.initLoan, principal: principal,
+            eventType: EventType.initLoan, 
+            eventId: randomUUID(),
+            principal: principal,
             interest: 0,
             lateInterest: 0,
             lateFee: 0,
@@ -80,6 +86,7 @@ const handleDisbursementChange = (event: React.ChangeEvent<HTMLInputElement>) =>
         <CardFooter>
         <Button onClick={() => addEvent({
             eventType: EventType.accrual, 
+            eventId:randomUUID(),
             principal: 0,
             interest: interest,
             lateInterest: 0,
@@ -107,6 +114,7 @@ const handleDisbursementChange = (event: React.ChangeEvent<HTMLInputElement>) =>
         <CardFooter className="-mt-4">
         <Button onClick={() => addEvent({
             eventType: EventType.deliquency, 
+            eventId:randomUUID(),
             principal: 0,
             interest: 0,
             lateInterest: lateInterest,
@@ -132,6 +140,7 @@ const handleDisbursementChange = (event: React.ChangeEvent<HTMLInputElement>) =>
         <CardFooter >
         <Button onClick={() => addEvent({
             eventType: EventType.payment, 
+            eventId:randomUUID(),
             principal: 0,
             interest: 0,
             lateInterest: 0,

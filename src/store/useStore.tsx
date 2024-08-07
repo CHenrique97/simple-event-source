@@ -1,3 +1,4 @@
+
 import {create} from 'zustand';
 
 export enum EventType {
@@ -9,11 +10,12 @@ export enum EventType {
 
 export interface EventState {
   eventType: EventType
-  principal: number
-  interest: number
-  lateInterest: number
-  lateFee: number
-  disbursement: number
+  eventId: string
+  principal: number | null
+  interest: number | null
+  lateInterest: number | null
+  lateFee: number | null
+  disbursement: number | null
 }
 
 // Define the state interface
