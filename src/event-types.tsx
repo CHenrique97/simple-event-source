@@ -18,6 +18,8 @@ export const EventTypes = () => {
   const [lateFee, setLateFee] = useState(0);
   const [disbursement, setDisbursement] = useState(0);
 
+  const appendEvent = useStore((state) => state.appendEvent);
+
   const handlePrincipalChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPrincipal(Number(event.target.value));
   }
@@ -36,7 +38,7 @@ const handleDisbursementChange = (event: React.ChangeEvent<HTMLInputElement>) =>
 
 
   const  addEvent = (eventState: EventState) => {
-    useStore((state) => state.appendEvent(eventState));
+    appendEvent(eventState);
   }
 
   return (

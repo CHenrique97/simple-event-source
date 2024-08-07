@@ -6,6 +6,7 @@ import { Field } from "./fields/fields";
 import Snapshot from "./card/snapshot";
 import { ThemeProvider } from "./components/ui/theme-provider";
 import { EventTypes } from "./event-types";
+import { EventList } from "./event-list";
 
 function App() {
   const snapshotStyle: React.CSSProperties = {
@@ -23,7 +24,8 @@ function App() {
   const eventListStyle: React.CSSProperties = {
     margin: "5px",
     display: "flex",
-    justifyContent: "center",
+    flexDirection: "column",
+    alignItems: "center",
     alignContent: "flex-start",
     width: "300px", // Width of the square
     height: "400px", // Height of the square
@@ -46,7 +48,9 @@ function App() {
       <div className="flex items-center justify-center min-h-screen">
         <div className="w-45 max-w-screen-lg">
           <div className="calculation-area space-y-4">
-            <Field title="Event list" style={eventListStyle}></Field>
+            <Field title="Event list" style={eventListStyle}>
+              <EventList></EventList>
+            </Field>
 
             <Field title="Snapshot" style={snapshotStyle}>
               <Snapshot />
