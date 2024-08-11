@@ -17,7 +17,7 @@ const AnimatedValue = ({ value }) => (
 );
 
 let calculations = (eventList: EventState[]) => {
-  const { setPrincipal, setInterest, setLateFee } = useStore.getState();
+  const {principal, interest, lateFee, setPrincipal, setInterest, setLateFee } = useStore.getState();
 
   if (eventList.length === 0) {
     console.log("Event list is empty.");
@@ -29,38 +29,50 @@ let calculations = (eventList: EventState[]) => {
   switch (lastEvent.eventType) {
     case EventType.initLoan:
       if (lastEvent.principal !== null) setPrincipal(lastEvent.principal);
-      console.log("Initializing loan with principal:", lastEvent.principal);
-      // Perform initLoan-specific actions here
-      break;
+     break;
 
     case EventType.accrual:
-      if (lastEvent.interest !== null) setInterest(lastEvent.interest);
-      console.log("Accruing interest:", lastEvent.interest);
-      // Perform accrual-specific actions here
+      if (lastEvent.interest !== null) {
+        const interestTotal :number  =( (lastEvent.interest/100) * principal) + interest
+        
+        setInterest(interestTotal)};
+
       break;
 
     case EventType.deliquency:
-      if (lastEvent.lateFee !== null) setLateFee(lastEvent.lateFee);
-      console.log(
-        "Delinquency detected. Late interest:",
-        lastEvent.lateInterest,
-        "Late fee:",
-        lastEvent.lateFee
-      );
+      if (lastEvent.lateFee !== null) {
+        setLateFee(lateFee + lastEvent.lateFee)
+      const lateInterestTotal: number = (lastEvent.lateInterest || 0  * principal) + interest;
+      setInterest(lateInterestTotal)}
       // Perform delinquency-specific actions here
       break;
 
     case EventType.payment:
-      if (lastEvent.principal !== null) setPrincipal(lastEvent.principal);
-      if (lastEvent.interest !== null) setInterest(lastEvent.interest);
-      console.log(
-        "Processing payment. Principal:",
-        lastEvent.principal,
-        "Interest:",
-        lastEvent.interest
-      );
-      // Perform payment-specific actions here
-      break;
+      if (lastEvent.disbursement !== null) {
+        let remainingDisbursement = lastEvent.disbursement;
+
+        // Deduct from late fee first
+        if (lateFee > 0) {
+          const lateFeeDeduction = Math.min(remainingDisbursement, lateFee);
+          setLateFee(lateFee - lateFeeDeduction);
+          remainingDisbursement -= lateFeeDeduction;
+        }
+
+        // Deduct from interest second
+        if (remainingDisbursement > 0 && interest > 0) {
+          const interestDeduction = Math.min(remainingDisbursement, interest);
+          setInterest(interest - interestDeduction);
+          remainingDisbursement -= interestDeduction;
+        }
+
+        // Deduct from principal last
+        if (remainingDisbursement > 0 && principal > 0) {
+          const principalDeduction = Math.min(remainingDisbursement, principal);
+          setPrincipal(principal - principalDeduction);
+          remainingDisbursement -= principalDeduction;
+        }
+      }
+      break
 
     default:
       console.log("Unknown event type:", lastEvent.eventType);
@@ -80,7 +92,7 @@ const Snapshot: React.FC = () => {
   return (
     <Card className={cn("w-[300px]")}>
       <CardContent>
-        <div className="grid w-full items-center justify-center gap-10">
+        <div className="flex flex-col items-center justify-center gap-10">
           <div className="flex flex-row space-x-1.5 mt-8">
             <CardTitle>Principal:</CardTitle>
             <CardTitle>

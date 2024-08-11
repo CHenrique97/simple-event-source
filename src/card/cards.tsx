@@ -1,5 +1,4 @@
 import {useDraggable} from '@dnd-kit/core';
-import { v4 as uuidv4 } from 'uuid';
 
 export function DraggableCard(props:any) {
   const {attributes, listeners, setNodeRef, transform} = useDraggable({
