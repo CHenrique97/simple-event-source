@@ -52,7 +52,7 @@ const handleDisbursementChange = (event: React.ChangeEvent<HTMLInputElement>) =>
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5 items-center">
                 <Label htmlFor="name"> Principal </Label>
-                <Input id="principal" placeholder="           $ 100 "  onChange={handlePrincipalChange} />
+                <Input id="principal"  className="text-center" placeholder="$ 100 "  onChange={handlePrincipalChange} />
               </div>
             </div>
           </form>
@@ -78,7 +78,7 @@ const handleDisbursementChange = (event: React.ChangeEvent<HTMLInputElement>) =>
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5 items-center">
                 <Label htmlFor="name"> Interest </Label>
-                <Input id="Interest" placeholder="           % 10 " onChange={handleInterestChange} />
+                <Input id="Interest"  className="text-center" placeholder="% 10 " onChange={handleInterestChange} />
               </div>
             </div>
           </form>
@@ -104,9 +104,9 @@ const handleDisbursementChange = (event: React.ChangeEvent<HTMLInputElement>) =>
             <div className="grid w-full items-center gap-4 ">
               <div className="flex flex-col space-y-1 items-center">
                 <Label htmlFor="name"> Late interest </Label>
-                <Input id="name" placeholder="           % 20 " onChange={handleLateInterestChange}/>
+                <Input id="name"  className="text-center" placeholder="% 20 " onChange={handleLateInterestChange}/>
                 <Label htmlFor="name"> Late fee </Label>
-                <Input id="name" placeholder="           $ 10 " onChange={handleLateFeeChange}/>
+                <Input id="name"  className="text-center" placeholder="$ 10 " onChange={handleLateFeeChange}/>
               </div>
             </div>
           </form>
@@ -132,7 +132,7 @@ const handleDisbursementChange = (event: React.ChangeEvent<HTMLInputElement>) =>
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5 items-center">
                 <Label htmlFor="name"> Amount </Label>
-                <Input id="name" placeholder="           $ 100 " onChange={handleDisbursementChange} />
+                <Input id="name"  className="text-center"  placeholder="$ 100 " onChange={handleDisbursementChange} />
               </div>
             </div>
           </form>
