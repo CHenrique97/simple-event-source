@@ -23,8 +23,8 @@ let calculations = (eventList: EventState[]) => {
   }
 
   let currentPrincipal = principal;
-  let currentInterest = interest;
-  let currentLateFee = lateFee;
+  let currentInterest = 0;
+  let currentLateFee = 0;
 
   for (let i = 0; i < eventList.length; i++) {
     const event = eventList[i];
@@ -286,7 +286,7 @@ export const EventList = () => {
         >
           <Collapsible
             open={isOpen[index]}
-            className="space-y-2"
+            className="space-y-2 flex flex-col items-center "
           >
             <CollapsibleTrigger>
             <Card className="flex items-center justify-center p-[3px]" onClick={() => updateElement(index)}>
