@@ -4,7 +4,11 @@ import { cn } from "@/lib/utils";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 
-const AnimatedValue = ({ value }) => (
+interface AnimatedValueProps {
+  value: number;
+}
+
+const AnimatedValue: React.FC<AnimatedValueProps> = ({ value }) => (
   <motion.h3
     key={value}
     initial={{ opacity: 0 }}
@@ -15,7 +19,6 @@ const AnimatedValue = ({ value }) => (
     $ {value}
   </motion.h3>
 );
-
 let calculations = (eventList: EventState[]) => {
   const {principal, interest, lateFee, setPrincipal, setInterest, setLateFee } = useStore.getState();
 
@@ -87,7 +90,7 @@ const Snapshot: React.FC = () => {
 
   useEffect(() => {
     calculations(eventList);
-  }, [eventList]);
+  }, [eventList.length]);
 
   return (
     <Card className={cn("w-[300px]")}>

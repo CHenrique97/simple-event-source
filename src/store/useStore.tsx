@@ -28,6 +28,7 @@ interface StoreState {
     setInterest: (value: number) => void
     setLateFee: (value: number) => void
     appendEvent: (value: EventState ) => void
+    changeEvent: (value: EventState, index:number ) => void
     reset: () => void;
   }
 
@@ -46,6 +47,12 @@ interface StoreState {
     setLateFee: (value: number) => set(() => ({ lateFee: value })),
 
     appendEvent: (value: EventState) => set((state) => ({ eventList: [...state.eventList, value] })),
+
+    changeEvent: (value: EventState, index: number) => set((state) => ({
+      eventList: state.eventList.map((event, i) =>
+        i === index ? value : event
+      )
+    })),
   
     // Action to reset the state
     reset: () => set(() => ({ principal: 0, interest: 0, lateFee: 0 }))

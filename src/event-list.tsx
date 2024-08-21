@@ -1,135 +1,247 @@
-import { forwardRef, ReactElement, useEffect, useRef, useState } from "react";
-import useStore, { EventType } from "./store/useStore";
+import { useEffect, useRef, useState } from "react";
+import useStore, { EventState, EventType } from "./store/useStore";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "./components/ui/collapsible";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "./components/ui/card";
+import { Card, CardContent, CardTitle } from "./components/ui/card";
 import { motion } from "framer-motion";
 import { Label } from "@radix-ui/react-label";
 import { Button } from "./components/ui/button";
 import { Input } from "./components/ui/input";
 
-const changeEvent = (uuid:string) => {
-  return uuid
-}
 
-const falseArray = Array(10).fill(false)
+const falseArray = Array(100).fill(false)
+
+let calculations = (eventList: EventState[]) => {
+  const { principal, interest, lateFee, setPrincipal, setInterest, setLateFee } = useStore.getState();
+
+  if (eventList.length === 0) {
+    console.log("Event list is empty.");
+    return;
+  }
+
+  let currentPrincipal = principal;
+  let currentInterest = interest;
+  let currentLateFee = lateFee;
+
+  for (let i = 0; i < eventList.length; i++) {
+    const event = eventList[i];
+
+    switch (event.eventType) {
+      case EventType.initLoan:
+        if (event.principal !== null) {
+          currentPrincipal = event.principal;
+        }
+        break;
+
+      case EventType.accrual:
+        if (event.interest !== null) {
+          currentInterest += (event.interest / 100) * currentPrincipal;
+        }
+        break;
+
+      case EventType.deliquency:
+        if (event.lateFee !== null) {
+          currentLateFee += event.lateFee;
+        }
+        if (event.lateInterest !== null) {
+          currentInterest += event.lateInterest * currentPrincipal;
+        }
+        break;
+
+      case EventType.payment:
+        if (event.disbursement !== null) {
+          let remainingDisbursement = event.disbursement;
+
+          // Deduct from late fee first
+          if (currentLateFee > 0) {
+            const lateFeeDeduction = Math.min(remainingDisbursement, currentLateFee);
+            currentLateFee -= lateFeeDeduction;
+            remainingDisbursement -= lateFeeDeduction;
+          }
+
+          // Deduct from interest second
+          if (remainingDisbursement > 0 && currentInterest > 0) {
+            const interestDeduction = Math.min(remainingDisbursement, currentInterest);
+            currentInterest -= interestDeduction;
+            remainingDisbursement -= interestDeduction;
+          }
+
+          // Deduct from principal last
+          if (remainingDisbursement > 0 && currentPrincipal > 0) {
+            const principalDeduction = Math.min(remainingDisbursement, currentPrincipal);
+            currentPrincipal -= principalDeduction;
+            remainingDisbursement -= principalDeduction;
+          }
+        }
+        break;
+
+      default:
+        console.log("Unknown event type:", event.eventType);
+    }
+  }
+
+  // Update the store with the final values after processing all events
+  setPrincipal(currentPrincipal);
+  setInterest(currentInterest);
+  setLateFee(currentLateFee);
+};
+
 
 export const EventList = () => {
-
-
  
-  const [principal, setPrincipal] = useState(0);
-  const [interest, setInterest] = useState(0);
-  const [lateInterest, setLateInterest] = useState(0);
-  const [lateFee, setLateFee] = useState(0);
-  const [disbursement, setDisbursement] = useState(0);
 
 
-  const handlePrincipalChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPrincipal(Number(event.target.value));
+  const handlePrincipalChange = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { eventList, changeEvent } = useStore.getState();
+    
+    const updatedEvent: EventState = {
+      ...eventList[index],
+      principal: Number(event.target.value)
+    };
+    
+    changeEvent(updatedEvent, index);
   }
-const handleInterestChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInterest(Number(event.target.value));
-  } 
-const handleLateInterestChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setLateInterest(Number(event.target.value));
+  
+  const handleInterestChange = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { eventList, changeEvent } = useStore.getState();
+    
+    const updatedEvent: EventState = {
+      ...eventList[index],
+      interest: Number(event.target.value)
+    };
+    
+    changeEvent(updatedEvent, index);
   }
-const handleLateFeeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setLateFee(Number(event.target.value));
+  
+  const handleLateInterestChange = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { eventList, changeEvent } = useStore.getState();
+    
+    const updatedEvent: EventState = {
+      ...eventList[index],
+      lateInterest: Number(event.target.value)
+    };
+    
+    changeEvent(updatedEvent, index);
   }
-const handleDisbursementChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setDisbursement(Number(event.target.value));
+  
+  const handleLateFeeChange = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { eventList, changeEvent } = useStore.getState();
+    
+    const updatedEvent: EventState = {
+      ...eventList[index],
+      lateFee: Number(event.target.value)
+    };
+    
+    changeEvent(updatedEvent, index);
+  }
+  
+  const handleDisbursementChange = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { eventList, changeEvent } = useStore.getState();
+    
+    const updatedEvent: EventState = {
+      ...eventList[index],
+      disbursement: Number(event.target.value)
+    };
+    
+    changeEvent(updatedEvent, index);
   }
 
-
-  const componentMap = {
-    0: (
-      <Card className="flex flex-col items-center">
-        <CardContent>
-          <form>
-            <div className="grid w-full items-center gap-4">
-              <div className="flex flex-col space-y-1.5 items-center">
-                <Label htmlFor="principal">Principal</Label>
-                <Input
-                  id="principal"
-                  className="text-center"
-                  placeholder="$ 100"
-                  onChange={handlePrincipalChange}
-                />
-              </div>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
-    ),
-    1: (
-      <Card className=" flex flex-col items-center">
-        <CardContent>
-          <form>
-            <div className="grid w-full items-center gap-4">
-              <div className="flex flex-col space-y-1.5 items-center">
-                <Label htmlFor="interest">Interest</Label>
-                <Input
-                  id="interest"
-                  className="text-center"
-                  placeholder="% 10"
-                  onChange={handleInterestChange}
-                />
-              </div>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
-    ),
-    2: (
-      <Card className=" flex flex-col items-center">
-        <CardContent>
-          <form>
-            <div className="grid w-full items-center gap-4">
-              <div className="flex flex-col space-y-1 items-center">
-                <Label htmlFor="lateInterest">Late interest</Label>
-                <Input
-                  id="lateInterest"
-                  className="text-center"
-                  placeholder="% 20"
-                  onChange={handleLateInterestChange}
-                />
-                <Label htmlFor="lateFee">Late fee</Label>
-                <Input
-                  id="lateFee"
-                  className="text-center"
-                  placeholder="$ 10"
-                  onChange={handleLateFeeChange}
-                />
-              </div>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
-    ),
-    3: (
-      <Card className="flex flex-col items-center">
-        <CardContent>
-          <form>
-            <div className="grid w-full items-center gap-4">
-              <div className="flex flex-col space-y-1.5 items-center">
-                <Label htmlFor="disbursement">Amount</Label>
-                <Input
-                  id="disbursement"
-                  className="text-center"
-                  placeholder="$ 100"
-                  onChange={handleDisbursementChange}
-                />
-              </div>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
-    ),
-  }
+  const renderComponent = (eventType: number, index: number) => {
+    switch (eventType) {
+      case 0:
+        return (
+          <Card className="flex flex-col items-center">
+            <CardContent>
+              <form>
+                <div className="grid w-full items-center gap-4">
+                  <div className="flex flex-col space-y-1.5 items-center">
+                    <Label htmlFor="principal">Principal</Label>
+                    <Input
+                      id="principal"
+                      className="text-center"
+                      placeholder="$ 100"
+                      onChange={handlePrincipalChange(index)}
+                    />
+                  </div>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+        );
+      case 1:
+        return (
+          <Card className="flex flex-col items-center">
+            <CardContent>
+              <form>
+                <div className="grid w-full items-center gap-4">
+                  <div className="flex flex-col space-y-1.5 items-center">
+                    <Label htmlFor="interest">Interest</Label>
+                    <Input
+                      id="interest"
+                      className="text-center"
+                      placeholder="% 10"
+                      onChange={handleInterestChange(index)}
+                    />
+                  </div>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+        );
+      case 2:
+        return (
+          <Card className="flex flex-col items-center">
+            <CardContent>
+              <form>
+                <div className="grid w-full items-center gap-4">
+                  <div className="flex flex-col space-y-1 items-center">
+                    <Label htmlFor="lateInterest">Late interest</Label>
+                    <Input
+                      id="lateInterest"
+                      className="text-center"
+                      placeholder="% 20"
+                      onChange={handleLateInterestChange(index)}
+                    />
+                    <Label htmlFor="lateFee">Late fee</Label>
+                    <Input
+                      id="lateFee"
+                      className="text-center"
+                      placeholder="$ 10"
+                      onChange={handleLateFeeChange(index)}
+                    />
+                  </div>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+        );
+      case 3:
+        return (
+          <Card className="flex flex-col items-center">
+            <CardContent>
+              <form>
+                <div className="grid w-full items-center gap-4">
+                  <div className="flex flex-col space-y-1.5 items-center">
+                    <Label htmlFor="disbursement">Amount</Label>
+                    <Input
+                      id="disbursement"
+                      className="text-center"
+                      placeholder="$ 100"
+                      onChange={handleDisbursementChange(index)}
+                    />
+                  </div>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+        );
+      default:
+        return null;
+    }
+  };
 
   const eventTypesMap = {
     0: "Init Loan",
@@ -182,7 +294,7 @@ const handleDisbursementChange = (event: React.ChangeEvent<HTMLInputElement>) =>
             </Card>
             </CollapsibleTrigger>
             <CollapsibleContent className="w-[120px] space-y-2">
-            {componentMap[event.eventType]}
+            {renderComponent(event.eventType,index)}
             </CollapsibleContent>
           </Collapsible>
           {/* Conditionally render the arrow for all items except the last one */}
@@ -194,7 +306,7 @@ const handleDisbursementChange = (event: React.ChangeEvent<HTMLInputElement>) =>
         </motion.div>
       ))}
     </div>
-    <Button className="mb-3">Republish</Button>
+    <Button className="mb-3" onClick={()=>calculations(events)}>Republish</Button>
     </>
   );
 };
