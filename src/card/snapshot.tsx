@@ -19,7 +19,7 @@ const AnimatedValue: React.FC<AnimatedValueProps> = ({ value }) => (
     $ {value}
   </motion.h3>
 );
-let calculations = (eventList: EventState[]) => {
+const calculations = (eventList: EventState[]) => {
   const {principal, interest, lateFee, setPrincipal, setInterest, setLateFee } = useStore.getState();
 
   if (eventList.length === 0) {
@@ -38,7 +38,7 @@ let calculations = (eventList: EventState[]) => {
       if (lastEvent.interest !== null) {
         const interestTotal :number  =( (lastEvent.interest/100) * principal) + interest
         
-        setInterest(interestTotal)};
+        setInterest(interestTotal)}
 
       break;
 

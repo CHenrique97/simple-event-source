@@ -14,8 +14,8 @@ import { Input } from "./components/ui/input";
 
 const falseArray = Array(100).fill(false)
 
-let calculations = (eventList: EventState[]) => {
-  const { principal, interest, lateFee, setPrincipal, setInterest, setLateFee } = useStore.getState();
+const calculations = (eventList: EventState[]) => {
+  const { principal, setPrincipal, setInterest, setLateFee } = useStore.getState();
 
   if (eventList.length === 0) {
     console.log("Event list is empty.");
