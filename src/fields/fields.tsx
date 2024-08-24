@@ -1,6 +1,8 @@
 import { CardHeader, CardTitle } from "@/components/ui/card";
 import "./fields.css"
 import {useDroppable} from '@dnd-kit/core';
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 type Fields = {
   style?: React.CSSProperties; // React.CSSProperties is more appropriate for styling
@@ -19,13 +21,21 @@ export const Field  = (props: Fields)  => {
     ...props.style
   }
   
+  const [showTitle, setShowTitle] = useState(props.title !== "Snapshot");
+
+  const handleRevealClick = () => {
+    setShowTitle(true);
+  };
   
   return (
     <>
     <div ref={setNodeRef} style ={customStyle}> 
     <CardHeader>
-    <CardTitle>{props.title}</CardTitle>
-
+        {showTitle ? (
+          <CardTitle>{props.title}</CardTitle>
+        ) : (
+          <Button onClick={handleRevealClick}>Reveal Name</Button>
+        )}
   </CardHeader>
     {props.children}
     </div>

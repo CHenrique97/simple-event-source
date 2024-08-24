@@ -11,18 +11,12 @@ import { Label } from "@radix-ui/react-label";
 import { Button } from "./components/ui/button";
 import { Input } from "./components/ui/input";
 
-
-const falseArray = Array(100).fill(false)
+const falseArray = Array(100).fill(false);
 
 const calculations = (eventList: EventState[]) => {
-  const { principal, setPrincipal, setInterest, setLateFee } = useStore.getState();
+  const { setPrincipal, setInterest, setLateFee } = useStore.getState();
 
-  if (eventList.length === 0) {
-    console.log("Event list is empty.");
-    return;
-  }
-
-  let currentPrincipal = principal;
+  let currentPrincipal = 0;
   let currentInterest = 0;
   let currentLateFee = 0;
 
@@ -38,6 +32,7 @@ const calculations = (eventList: EventState[]) => {
 
       case EventType.accrual:
         if (event.interest !== null) {
+
           currentInterest += (event.interest / 100) * currentPrincipal;
         }
         break;
@@ -57,29 +52,38 @@ const calculations = (eventList: EventState[]) => {
 
           // Deduct from late fee first
           if (currentLateFee > 0) {
-            const lateFeeDeduction = Math.min(remainingDisbursement, currentLateFee);
+            const lateFeeDeduction = Math.min(
+              remainingDisbursement,
+              currentLateFee
+            );
             currentLateFee -= lateFeeDeduction;
             remainingDisbursement -= lateFeeDeduction;
           }
 
           // Deduct from interest second
           if (remainingDisbursement > 0 && currentInterest > 0) {
-            const interestDeduction = Math.min(remainingDisbursement, currentInterest);
+            const interestDeduction = Math.min(
+              remainingDisbursement,
+              currentInterest
+            );
             currentInterest -= interestDeduction;
             remainingDisbursement -= interestDeduction;
           }
 
           // Deduct from principal last
           if (remainingDisbursement > 0 && currentPrincipal > 0) {
-            const principalDeduction = Math.min(remainingDisbursement, currentPrincipal);
+            const principalDeduction = Math.min(
+              remainingDisbursement,
+              currentPrincipal
+            );
             currentPrincipal -= principalDeduction;
             remainingDisbursement -= principalDeduction;
           }
         }
         break;
 
-      default:
-        console.log("Unknown event type:", event.eventType);
+      default: {
+      }
     }
   }
 
@@ -89,65 +93,66 @@ const calculations = (eventList: EventState[]) => {
   setLateFee(currentLateFee);
 };
 
-
 export const EventList = () => {
- 
+  const handlePrincipalChange =
+    (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
+      const { eventList, changeEvent } = useStore.getState();
 
+      const updatedEvent: EventState = {
+        ...eventList[index],
+        principal: Number(event.target.value),
+      };
 
-  const handlePrincipalChange = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { eventList, changeEvent } = useStore.getState();
-    
-    const updatedEvent: EventState = {
-      ...eventList[index],
-      principal: Number(event.target.value)
+      changeEvent(updatedEvent, index);
     };
-    
-    changeEvent(updatedEvent, index);
-  }
-  
-  const handleInterestChange = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { eventList, changeEvent } = useStore.getState();
-    
-    const updatedEvent: EventState = {
-      ...eventList[index],
-      interest: Number(event.target.value)
+
+  const handleInterestChange =
+    (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
+      const { eventList, changeEvent } = useStore.getState();
+
+      const updatedEvent: EventState = {
+        ...eventList[index],
+        interest: Number(event.target.value),
+      };
+
+      changeEvent(updatedEvent, index);
     };
-    
-    changeEvent(updatedEvent, index);
-  }
-  
-  const handleLateInterestChange = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { eventList, changeEvent } = useStore.getState();
-    
-    const updatedEvent: EventState = {
-      ...eventList[index],
-      lateInterest: Number(event.target.value)
+
+  const handleLateInterestChange =
+    (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
+      const { eventList, changeEvent } = useStore.getState();
+
+      const updatedEvent: EventState = {
+        ...eventList[index],
+        lateInterest: Number(event.target.value),
+      };
+
+      changeEvent(updatedEvent, index);
     };
-    
-    changeEvent(updatedEvent, index);
-  }
-  
-  const handleLateFeeChange = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { eventList, changeEvent } = useStore.getState();
-    
-    const updatedEvent: EventState = {
-      ...eventList[index],
-      lateFee: Number(event.target.value)
+
+  const handleLateFeeChange =
+    (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
+      const { eventList, changeEvent } = useStore.getState();
+
+      const updatedEvent: EventState = {
+        ...eventList[index],
+        lateFee: Number(event.target.value),
+      };
+
+      changeEvent(updatedEvent, index);
     };
-    
-    changeEvent(updatedEvent, index);
-  }
-  
-  const handleDisbursementChange = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { eventList, changeEvent } = useStore.getState();
-    
-    const updatedEvent: EventState = {
-      ...eventList[index],
-      disbursement: Number(event.target.value)
+
+  const handleDisbursementChange =
+    (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
+      const { eventList, changeEvent } = useStore.getState();
+
+      const updatedEvent: EventState = {
+        ...eventList[index],
+        disbursement: Number(event.target.value),
+      };
+
+      changeEvent(updatedEvent, index);
     };
-    
-    changeEvent(updatedEvent, index);
-  }
 
   const renderComponent = (eventType: number, index: number) => {
     switch (eventType) {
@@ -258,7 +263,6 @@ export const EventList = () => {
 
     // Update the specific element
     updatedArray[index] = !isOpen[index];
-    console.log(updatedArray)
     // Set the new state
     setIsOpen(updatedArray);
   };
@@ -274,39 +278,44 @@ export const EventList = () => {
 
   return (
     <>
-    <div className="flex flex-col items-center justify-center overflow-y-auto overflow-x-hidden custom-scrollbar pb-[10px]">
-      {" "}
-      {events.map((event, index) => (
-        <motion.div
-          key={event.eventId}
-          ref={lastEventRef}
-          initial={{ opacity: 0, translateY: -20 }}
-          animate={{ opacity: 1, translateY: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <Collapsible
-            open={isOpen[index]}
-            className="space-y-2 flex flex-col items-center "
+      <div className="flex flex-col items-center justify-center overflow-y-auto overflow-x-hidden custom-scrollbar pb-[10px]">
+        {" "}
+        {events.map((event, index) => (
+          <motion.div
+            key={event.eventId}
+            ref={lastEventRef}
+            initial={{ opacity: 0, translateY: -20 }}
+            animate={{ opacity: 1, translateY: 0 }}
+            transition={{ duration: 0.5 }}
           >
-            <CollapsibleTrigger>
-            <Card className="flex items-center justify-center p-[3px]" onClick={() => updateElement(index)}>
-              <CardTitle>{eventTypesMap[event.eventType]}</CardTitle>
-            </Card>
-            </CollapsibleTrigger>
-            <CollapsibleContent className="w-[120px] space-y-2">
-            {renderComponent(event.eventType,index)}
-            </CollapsibleContent>
-          </Collapsible>
-          {/* Conditionally render the arrow for all items except the last one */}
-          {index < events.length - 1 && (
-            <div className="flex justify-center">
-              <div className="w-0 h-0 border-l-[10px] border-r-[10px] border-t-[10px] border-l-transparent border-r-transparent border-t-white m-[10px]"></div>
-            </div>
-          )}
-        </motion.div>
-      ))}
-    </div>
-    <Button className="mb-3" onClick={()=>calculations(events)}>Republish</Button>
+            <Collapsible
+              open={isOpen[index]}
+              className="space-y-2 flex flex-col items-center "
+            >
+              <CollapsibleTrigger>
+                <Card
+                  className="flex items-center justify-center p-[3px]"
+                  onClick={() => updateElement(index)}
+                >
+                  <CardTitle>{eventTypesMap[event.eventType]}</CardTitle>
+                </Card>
+              </CollapsibleTrigger>
+              <CollapsibleContent className="w-[120px] space-y-2">
+                {renderComponent(event.eventType, index)}
+              </CollapsibleContent>
+            </Collapsible>
+            {/* Conditionally render the arrow for all items except the last one */}
+            {index < events.length - 1 && (
+              <div className="flex justify-center">
+                <div className="w-0 h-0 border-l-[10px] border-r-[10px] border-t-[10px] border-l-transparent border-r-transparent border-t-white m-[10px]"></div>
+              </div>
+            )}
+          </motion.div>
+        ))}
+      </div>
+      <Button className="mb-3" onClick={() => calculations(events)}>
+        Republish
+      </Button>
     </>
   );
 };

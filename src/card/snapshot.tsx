@@ -23,7 +23,6 @@ const calculations = (eventList: EventState[]) => {
   const {principal, interest, lateFee, setPrincipal, setInterest, setLateFee } = useStore.getState();
 
   if (eventList.length === 0) {
-    console.log("Event list is empty.");
     return;
   }
 
@@ -78,7 +77,7 @@ const calculations = (eventList: EventState[]) => {
       break
 
     default:
-      console.log("Unknown event type:", lastEvent.eventType);
+      {}
   }
 };
 
@@ -97,21 +96,21 @@ const Snapshot: React.FC = () => {
       <CardContent>
         <div className="flex flex-col items-center justify-center gap-10">
           <div className="flex flex-row space-x-1.5 mt-8">
-            <CardTitle>Principal:</CardTitle>
+          <CardTitle>Principal:</CardTitle>
             <CardTitle>
-            <AnimatedValue value={principal} />
+              <AnimatedValue value={Number(principal.toFixed(2))} />
             </CardTitle>
           </div>
           <div className="flex flex-row space-x-4">
             <CardTitle>Interest:</CardTitle>
             <CardTitle>
-            <AnimatedValue value={interest} />
+              <AnimatedValue value={Number(interest.toFixed(2))} />
             </CardTitle>
           </div>
           <div className="flex flex-row space-x-2.5">
             <CardTitle>Late Fee:</CardTitle>
             <CardTitle>
-            <AnimatedValue value={lateFee} />
+              <AnimatedValue value={Number(lateFee.toFixed(2))} />
             </CardTitle>
           </div>
         </div>
