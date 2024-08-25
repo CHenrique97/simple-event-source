@@ -42,7 +42,7 @@ const calculations = (eventList: EventState[]) => {
           currentLateFee += event.lateFee;
         }
         if (event.lateInterest !== null) {
-          currentInterest += event.lateInterest * currentPrincipal;
+          currentInterest += (event.lateInterest/100) * currentPrincipal;
         }
         break;
 
