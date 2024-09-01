@@ -7,6 +7,7 @@ import Snapshot from "./card/snapshot";
 import { ThemeProvider } from "./components/ui/theme-provider";
 import { EventTypes } from "./event-types";
 import { EventList } from "./event-list";
+import Joyride from 'react-joyride';
 
 function App() {
   const snapshotStyle: React.CSSProperties = {
@@ -41,10 +42,24 @@ function App() {
     borderRadius: "15px", // Rounded edges with 15px radius
   };
 
+  const steps = [
+    {
+      target: '#my-first-step',
+      content: 'Welcome to simple-event-sourcing, this is the list of events',
+    },
+    {
+      target: '#my-second-step',
+      content: 'To start, you can init a loan with the amount of choosing',
+    },
+  ];
+
+
+
 
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <Joyride steps={steps} />
       <div className="flex items-center justify-center min-h-screen">
         <div className="w-45 max-w-screen-lg">
           <div className="calculation-area space-y-4">
