@@ -55,7 +55,7 @@ interface StoreState {
     })),
   
     // Action to reset the state
-    reset: () => set(() => ({ principal: 0, interest: 0, lateFee: 0 }))
+    reset: () => set(() => ({ principal: 0, interest: 0, lateFee: 0 , eventList: [] })),
   }));
   
   export default useStore;

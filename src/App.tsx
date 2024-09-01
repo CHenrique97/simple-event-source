@@ -44,12 +44,36 @@ function App() {
 
   const steps = [
     {
-      target: '#my-first-step',
-      content: 'Welcome to simple-event-sourcing, this is the list of events',
+      target: '#arrival',
+      content: 'Welcome to simple-event-sourcing, this is the list of events, here you can pick what event you want to add to the event list,some events block other events'
     },
     {
-      target: '#my-second-step',
+      target: '#initloan',
       content: 'To start, you can init a loan with the amount of choosing',
+    },
+    {
+      target: '#accrual',
+      content: 'After you start your loan, you can accrue interest on it',
+    },
+    {
+      target: '#payement',
+      content: 'after interest is accrued, you can make a payment on the loan or',
+    },
+    {
+      target: '#late',
+      content: 'if you are late on your payment, you can add a late fee and late interest to the loan',
+    },
+    {
+      target: '#republish',
+      content: 'You can change the values of the events and replublish them',
+    },
+    {
+      target: '#snapshot',
+      content: 'This is the snapshot of the loan, it shows the current state of the values of the loan',
+    },
+    {
+      target: '#refresh',
+      content: 'You can reset the app the the original state',
     },
   ];
 

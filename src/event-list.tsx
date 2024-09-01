@@ -10,11 +10,12 @@ import { motion } from "framer-motion";
 import { Label } from "@radix-ui/react-label";
 import { Button } from "./components/ui/button";
 import { Input } from "./components/ui/input";
+import { FaSync } from 'react-icons/fa';
 
 const falseArray = Array(100).fill(false);
 
 const calculations = (eventList: EventState[]) => {
-  const { setPrincipal, setInterest, setLateFee } = useStore.getState();
+  const { setPrincipal, setInterest, setLateFee, } = useStore.getState();
 
   let currentPrincipal = 0;
   let currentInterest = 0;
@@ -154,6 +155,8 @@ export const EventList = () => {
       changeEvent(updatedEvent, index);
     };
 
+    const reset = () => useStore.getState().reset();
+
   const renderComponent = (eventType: number, index: number) => {
     switch (eventType) {
       case 0:
@@ -278,7 +281,7 @@ export const EventList = () => {
 
   return (
     <>
-      <div className="flex flex-col items-center justify-center overflow-y-auto overflow-x-hidden custom-scrollbar pb-[10px]">
+      <div className="flex flex-col items-center justify-center overflow-y-auto overflow-x-hidden custom-scrollbar pb-[10px]"  id="republish">
         {" "}
         {events.map((event, index) => (
           <motion.div
@@ -313,9 +316,14 @@ export const EventList = () => {
           </motion.div>
         ))}
       </div>
-      <Button className="mb-3" onClick={() => calculations(events)}>
-        Republish
-      </Button>
+      <div className="flex space-x-2 mb-3">
+        <Button className="mb-3" onClick={() => calculations(events)}>
+          Republish
+        </Button>
+        <Button variant="secondary" id="refresh" onClick={() => reset()}>
+          <FaSync />
+        </Button>
+      </div>
     </>
   );
 };

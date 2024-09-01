@@ -67,9 +67,9 @@ const handleDisbursementChange = (event: React.ChangeEvent<HTMLInputElement>) =>
   }
 
   return (
-    <div className="flex justify-center pb-10 overflow" id="my-first-step">
+    <div className="flex justify-center pb-10 overflow" id="arrival">
       {/* Init Loan Card */}
-      <Card className="w-[180px] h-[250px] mr-4 ml-2 flex flex-col items-center" id="my-second-step">
+      <Card className="w-[180px] h-[250px] mr-4 ml-2 flex flex-col items-center" id="initloan">
         <CardHeader className="flex items-center">
           <CardTitle>Init loan</CardTitle>
         </CardHeader>
@@ -113,7 +113,7 @@ const handleDisbursementChange = (event: React.ChangeEvent<HTMLInputElement>) =>
       </Card>
 
       {/* Accrual Card */}
-      <Card className="w-[180px] h-[250px] mr-4 flex flex-col items-center">
+      <Card className="w-[180px] h-[250px] mr-4 flex flex-col items-center" id="accrual">
         <CardHeader className="flex items-center">
           <CardTitle>Accrual</CardTitle>
         </CardHeader>
@@ -162,7 +162,7 @@ const handleDisbursementChange = (event: React.ChangeEvent<HTMLInputElement>) =>
       </Card>
 
       {/* Deliquency Card */}
-      <Card className="w-[180px] h-[250px] mr-4 flex flex-col items-center">
+      <Card className="w-[180px] h-[250px] mr-4 flex flex-col items-center" id="late">
         <CardHeader className="flex items-center">
           <CardTitle>Deliquency</CardTitle>
         </CardHeader>
@@ -213,7 +213,7 @@ const handleDisbursementChange = (event: React.ChangeEvent<HTMLInputElement>) =>
       </Card>
 
       {/* Payment Card */}
-      <Card className="w-[180px] h-[250px] mr-4 flex flex-col items-center">
+      <Card className="w-[180px] h-[250px] mr-4 flex flex-col items-center" id="payement">
         <CardHeader className="flex items-center">
           <CardTitle>Payment</CardTitle>
         </CardHeader>

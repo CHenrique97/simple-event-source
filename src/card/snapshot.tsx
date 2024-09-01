@@ -92,7 +92,7 @@ const Snapshot: React.FC = () => {
   }, [eventList.length]);
 
   return (
-    <Card className={cn("w-[300px]")}>
+    <Card className={cn("w-[300px]")} id="snapshot">
       <CardContent>
         <div className="flex flex-col items-center justify-center gap-10">
           <div className="flex flex-row space-x-1.5 mt-8">
